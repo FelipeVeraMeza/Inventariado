@@ -1,39 +1,96 @@
-**Welcome to your Base44 project** 
+# 🥜 Inventariado — POS "Maní & Más"
 
-**About**
+Sistema de **Punto de Venta (POS)** para una tienda que vende productos **a granel por peso**
+(maní, frutos secos, especias). Permite vender pesando producto, administrar el catálogo,
+ver el historial de ventas y un dashboard con métricas.
 
-View and Edit  your app on [Base44.com](http://Base44.com) 
+- **Frontend:** React 18 + Vite + Tailwind CSS + shadcn/ui
+- **Backend:** Node + Express (almacenamiento en archivo JSON)
+- **Sin autenticación** (modo local): la app entra directo al POS
 
-This project contains everything you need to run your app locally.
+> 📖 Documentación detallada del código en [DOCUMENTACION.md](DOCUMENTACION.md).
 
-**Edit the code in your local development environment**
+---
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+## 🚀 Cómo correrlo en local
 
-**Prerequisites:** 
+### 1. Requisitos
+- [Node.js](https://nodejs.org/) 18 o superior
 
-1. Clone the repository using the project's Git URL 
-2. Navigate to the project directory
-3. Install dependencies: `npm install`
-4. Create an `.env.local` file and set the right environment variables
+### 2. Instalar dependencias
+```bash
+# Dependencias del frontend
+npm install
+
+# Dependencias del backend
+npm --prefix server install
+```
+
+### 3. Levantar todo (backend + frontend a la vez)
+```bash
+npm run start:all
+```
+
+Esto inicia:
+- 🔵 **Backend** → http://localhost:4000/api
+- 🟢 **Frontend** → http://localhost:5173
+
+Abre **http://localhost:5173** en el navegador. Para detener todo: `Ctrl + C`.
+
+---
+
+## 📜 Scripts disponibles
+
+| Comando              | Qué hace                                  |
+|----------------------|-------------------------------------------|
+| `npm run start:all`  | Backend + frontend a la vez (recomendado) |
+| `npm run dev`        | Solo el frontend                          |
+| `npm run backend`    | Solo el backend                           |
+| `npm run build`      | Build de producción del frontend          |
+| `npm run preview`    | Previsualiza el build                     |
+| `npm run lint`       | Linter (ESLint)                           |
+
+---
+
+## 🗂️ Estructura
 
 ```
-VITE_BASE44_APP_ID=your_app_id
-VITE_BASE44_APP_BASE_URL=your_backend_url
-
-e.g.
-VITE_BASE44_APP_ID=cbef744a8545c389ef439ea6
-VITE_BASE44_APP_BASE_URL=https://my-to-do-list-81bfaad7.base44.app
+Invetariado/
+├── server/          # Backend Express (API + db.json)
+│   ├── index.js     # Rutas /api/products y /api/sales
+│   └── db.js        # Almacenamiento JSON (se crea solo en data/)
+└── src/             # Frontend React
+    ├── api/         # Capa de datos (config, cliente, entidades)
+    ├── pages/       # POS, Products, SalesHistory, Dashboard, AppSettings
+    ├── components/  # Layout, POS, productos y UI (shadcn)
+    ├── lib/ hooks/  # Utilidades
+    └── App.jsx      # Rutas
 ```
 
-Run the app: `npm run dev`
+---
 
-**Publish your changes**
+## 🌐 Local vs. Producción
 
-Open [Base44.com](http://Base44.com) and click on Publish.
+La URL del backend se configura en [src/api/config.js](src/api/config.js):
 
-**Docs & Support**
+```js
+const IP_PUBLICA = "vsv-contadores-production.up.railway.app";
 
-Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
+// Local (activo):
+export const API_BASE_URL = "http://localhost:4000/api";
+// Producción (descomenta para usar el backend desplegado):
+// export const API_BASE_URL = `https://${IP_PUBLICA}/api`;
+```
 
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+Para apuntar a producción, invierte los comentarios (activa la línea de Railway y comenta
+la de localhost).
+
+---
+
+## ⚠️ Notas
+
+- `node_modules/` y `server/data/` **no** están en el repo (ver `.gitignore`).
+  Se regeneran solos: `node_modules` con `npm install`, y la base de datos JSON al arrancar
+  el backend (incluye 3 productos de ejemplo en el primer arranque).
+- El almacenamiento es un archivo JSON: simple para empezar; en producción conviene
+  migrar a una base de datos real (Postgres) y agregar autenticación.
