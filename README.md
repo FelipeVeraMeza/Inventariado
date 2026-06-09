@@ -94,3 +94,5 @@ la de localhost).
   el backend (incluye 3 productos de ejemplo en el primer arranque).
 - El almacenamiento es un archivo JSON: simple para empezar; en producción conviene
   migrar a una base de datos real (Postgres) y agregar autenticación.
+
+funciona
